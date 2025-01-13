@@ -6,10 +6,25 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  let [firstname,setfirstname] = useState('');
+  let [lastname,setlastname] = useState('');
+  let [email,setemail] = useState('');
+  let [message,setmessage] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(firstname);
+    console.log(lastname);
+    console.log(email);
+    console.log(message);
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await fetch('http://localhost:8000/send_message',{
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({firstname:firstname, lastname:lastname,email:email,message:message}),
+  });
     setIsSubmitting(false);
     setFormStatus('success');
     setTimeout(() => setFormStatus('idle'), 3000);
@@ -61,6 +76,7 @@ export default function Contact() {
                   type="text"
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#E32726] focus:ring focus:ring-[#E32726] focus:ring-opacity-50"
+                  onChange={(e)=>{setfirstname(e.target.value);}}
                 />
               </div>
               <div>
@@ -69,6 +85,7 @@ export default function Contact() {
                   type="text"
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#E32726] focus:ring focus:ring-[#E32726] focus:ring-opacity-50"
+                  onChange={(e)=>{setlastname(e.target.value);}}
                 />
               </div>
             </div>
@@ -78,6 +95,9 @@ export default function Contact() {
                 type="email"
                 required
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#E32726] focus:ring focus:ring-[#E32726] focus:ring-opacity-50"
+                onChange={(e)=>{
+                  setemail(e.target.value);
+                }}
               />
             </div>
             <div className="mt-6">
@@ -86,6 +106,7 @@ export default function Contact() {
                 rows={4}
                 required
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#E32726] focus:ring focus:ring-[#E32726] focus:ring-opacity-50"
+                onChange={(e)=>{setmessage(e.target.value);}}
               ></textarea>
             </div>
             <button
